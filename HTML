@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Call App</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: white;
+    }
+    .tab {
+      display: none;
+      padding: 20px;
+    }
+    .active {
+      display: block;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      background: #eee;
+    }
+    .bottom-nav button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      background: #ddd;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+    }
+    .keypad button {
+      width: 30%;
+      padding: 15px;
+      margin: 5px;
+      font-size: 18px;
+    }
+    .contact {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- CALLS TAB -->
+<div id="calls" class="tab active">
+  <h2>Calls</h2>
+  <div id="callHistory"></div>
+</div>
+
+<!-- CONTACTS TAB -->
+<div id="contacts" class="tab">
+  <h2>Contacts ➕</h2>
+
+  <input type="text" id="name" placeholder="Name">
+  <input type="text" id="number" placeholder="Phone Number">
+  <button onclick="addContact()">Add Contact</button>
+
+  <div id="contactList"></div>
+</div>
+
+<!-- KEYPAD TAB -->
+<div id="keypad" class="tab">
+  <h2>Keypad</h2>
+
+  <input type="text" id="dialNumber" placeholder="Enter number">
+  <input type="text" id="search" placeholder="Search contact">
+
+  <div class="keypad">
+    <button onclick="press(1)">1</button>
+    <button onclick="press(2)">2</button>
+    <button onclick="press(3)">3</button><br>
+    <button onclick="press(4)">4</button>
+    <button onclick="press(5)">5</button>
+    <button onclick="press(6)">6</button><br>
+    <button onclick="press(7)">7</button>
+    <button onclick="press(8)">8</button>
+    <button onclick="press(9)">9</button><br>
+    <button onclick="press('*')">*</button>
+    <button onclick="press(0)">0</button>
+    <button onclick="press('#')">#</button>
+  </div>
+
+  <button onclick="makeCall()">📞 Call</button>
+</div>
+
+<!-- CONTACT DETAIL -->
+<div id="detail" class="tab">
+  <button onclick="goBack()">⬅ Back</button>
+  <h2 id="detailName"></h2>
+  <p id="detailNumber"></p>
+
+  <button>Message</button>
+  <button>Call</button>
+  <button>Video Call</button>
+  <button>Email</button>
+
+  <p>Set by user</p>
+
+  <p>Platform: Android</p>
+
+  <p>Email: example@gmail.com</p>
+
+  <textarea placeholder="Notes"></textarea>
+
+  <button>Send Message</button>
+  <button>Share Contact</button>
+  <button>Add to Favorite</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button onclick="showTab('calls')">Calls</button>
+  <button onclick="showTab('contacts')">Contacts</button>
+  <button onclick="showTab('keypad')">Keypad</button>
+</div>
+
+<script>
+let contacts = [];
+let history = [];
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+}
+
+function press(num) {
+  document.getElementById("dialNumber").value += num;
+}
+
+function addContact() {
+  let name = document.getElementById("name").value;
+  let number = document.getElementById("number").value;
+
+  contacts.push({name, number});
+  displayContacts();
+}
+
+function displayContacts() {
+  let list = document.getElementById("contactList");
+  list.innerHTML = "";
+
+  contacts.forEach((c, i) => {
+    list.innerHTML += `
+      <div class="contact" onclick="openDetail(${i})">
+        ${c.name} - ${c.number} ➡
+      </div>
+    `;
+  });
+}
+
+function openDetail(i) {
+  showTab('detail');
+  document.getElementById("detailName").innerText = contacts[i].name;
+  document.getElementById("detailNumber").innerText = contacts[i].number;
+}
+
+function goBack() {
+  showTab('contacts');
+}
+
+function makeCall() {
+  let number = document.getElementById("dialNumber").value;
+
+  history.push(number);
+  document.getElementById("callHistory").innerHTML += `<p>Called: ${number}</p>`;
+
+  alert("Calling " + number + " 📞");
+}
+</script>
+
+</body>
+</html>
